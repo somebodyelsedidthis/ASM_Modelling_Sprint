@@ -11,7 +11,7 @@ def test_solver():
     forces = np.array([
     0.0,
     0.0,
-    0.0
+    10.0
 ])
 
     boundary_conditions = np.array([
