@@ -1,17 +1,50 @@
-import elements
-import rotation
-import nodes
-import global_stiffness
-import solver
-import post_proc
+import nodes, elements, rotation, global_stiffness, solver, post_proc
 
 import numpy as np
 
-def main(node_info, element_info):
+def main(node_info, element_info, boundary_conditions):
 
     node_list = nodes.create_nodes(node_info)
     element_list = nodes.create_elements(element_info)
     connectivity_matrix = nodes.connectivity(element_list)
     forces = nodes.force_matrix(node_list)
-    
-    pass
+
+    angles = rotation.rotation_angles(element_list, node_list)
+
+    for elem in element_list:
+        elem.stiffness_matrix(node_list)
+
+    structure = global_stiffness.TrussStructure(
+        elements=element_list,
+        nodes=node_list,
+        connectivity_matrix=connectivity_matrix,
+        angles=angles
+    )
+
+    K_global = structure.assemble_global_stiffness_matrix()
+
+    fem_solver = solver.Solver(
+        global_stiffness_matrix=K_global,
+        forces=forces,
+        boundary_conditions=boundary_conditions
+    )
+
+    displacements = fem_solver.displacement()
+
+    reactions = post_proc.reaction(K_global, displacements, forces)
+    strains = post_proc.strain(
+        element_list,
+        node_list,
+        connectivity_matrix,
+        displacements,
+        angles,
+        structure
+    )
+    stresses = post_proc.stress(element_list, strains)
+
+    return {
+        'displacements' : displacements,
+        'reactions' : reactions,
+        'strains' : strains,
+        'stresses' : stresses
+    }
