@@ -1,5 +1,4 @@
 import numpy as np
-import elements
 
 class Node:
     def __init__(self,
@@ -85,6 +84,8 @@ def create_elements(element_info):
         rho             : density (defaults to 1.0 if not defined)
         element_type    : 'truss' or 'frame' (defaults to 'truss')
     '''
+    import elements
+    
     req_keys = {'node_i', 'node_j', 'E', 'A'}
     opt_keys = {'I', 'rho', 'element_type'}
 

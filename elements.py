@@ -7,8 +7,8 @@ class Element:
                  node_j: int,
                  E: float,
                  A: float,
-                 I: float,
-                 rho: float,
+                 I: float = 1.0,
+                 rho: float = 1.0,
                  element_type: str="truss"):
         
         self.node_i = np.asarray(node_i)
