@@ -12,13 +12,13 @@ class Node:
         self.F_x = F_x
         self.F_y = F_y
 
-        @property
-        def coords(self) -> np.ndarray:
-            return np.array([self.x, self.y])
+    @property
+    def coords(self) -> np.ndarray:
+        return np.array([self.x, self.y])
 
-        @property
-        def forces(self) -> np.ndarray:
-            return np.array([self.F_x, self.F_y])
+    @property
+    def forces(self) -> np.ndarray:
+        return np.array([self.F_x, self.F_y])
 
 def create_nodes(node_info):
     '''
