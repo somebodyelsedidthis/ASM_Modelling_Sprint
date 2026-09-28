@@ -4,15 +4,23 @@ import numpy as np
 
 def main(node_info, element_info, boundary_conditions):
 
+    # Create Node, Element objects #
+
     node_list = nodes.create_nodes(node_info)
     element_list = nodes.create_elements(element_info)
     connectivity_matrix = nodes.connectivity(element_list)
     forces = nodes.force_matrix(node_list)
 
+    # Calculate angles #
+
     angles = rotation.rotation_angles(element_list, node_list)
+
+    # Assemble local stiffness matrices #
 
     for elem in element_list:
         elem.stiffness_matrix(node_list)
+
+    # Construct Global Stiffness Matrix #
 
     structure = global_stiffness.TrussStructure(
         elements=element_list,
@@ -23,6 +31,8 @@ def main(node_info, element_info, boundary_conditions):
 
     K_global = structure.assemble_global_stiffness_matrix()
 
+    # Solve for global node displacements #
+
     fem_solver = solver.Solver(
         global_stiffness_matrix=K_global,
         forces=forces,
@@ -30,6 +40,8 @@ def main(node_info, element_info, boundary_conditions):
     )
 
     displacements = fem_solver.displacement()
+
+    # Post-processing #
 
     reactions = post_proc.reaction(K_global, displacements, forces)
     strains = post_proc.strain(
@@ -42,6 +54,8 @@ def main(node_info, element_info, boundary_conditions):
     )
     stresses = post_proc.stress(element_list, strains)
 
+    # Return Results #
+    
     return {
         'displacements' : displacements,
         'reactions' : reactions,
