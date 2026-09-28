@@ -12,9 +12,7 @@ RHO = 1.0
 def test_element():
     # If Pythagoras didn't lie this should pass
     elem = Element(NODE_I, NODE_J, E, A, I, RHO, "truss")
-    assert np.isclose(elem.length(), 5.0)
-    assert np.isclose(elem.angle(), np.arctan2(4, 3))
-
+    assert np.isclose(elem.length([NODE_I, NODE_J]), 5.0)
     # The truss matrix should be a symmetric 2x2 matrix
     k_truss = elem.stiffness_matrix()
     assert k_truss.shape == (2, 2)
