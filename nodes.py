@@ -112,7 +112,7 @@ def create_elements(element_info):
 
     return element_list
 
-def information(element_list):
+def connectivity(element_list):
     '''
     Parameters
     ----------
@@ -121,17 +121,27 @@ def information(element_list):
     Returns
     -------
     connectivity_matrix : numpy.ndarray
-    unique_nodes        : numpy.ndarray
 
     Description
     -----------
-    Create the connectivity matrix & array of nodes
+    Create the connectivity matrix
     '''
-    
     connectivity_matrix = np.array([[elem.node_i, elem.node_j] for elem in element_list])
 
     return connectivity_matrix
 
-def force_matrix(force_list, node_list):
-    
-    pass
+def force_matrix(node_list):
+    '''
+    Parameters
+    ----------
+    node_list : list[Node]
+
+    Returns
+    -------
+    F : np.ndarray
+
+    Description
+    -----------
+    Creates a 2N x 1 array of all the external forces on each node
+    '''
+    return np.array([node.forces for node in node_list]).reshape(-1,1)
