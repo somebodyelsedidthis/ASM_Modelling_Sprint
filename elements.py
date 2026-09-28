@@ -20,6 +20,7 @@ class Element:
 
     def length(self):
         self.element_length = np.linalg.norm(self.node_j - self.node_i)
+        return self.element_length
 
     def stiffness_matrix(self):
         L = self.length()
