@@ -4,10 +4,14 @@ class Node:
     def __init__(self,
                  x: float,
                  y: float,
+                 C_x: bool,
+                 C_y: bool,
                  F_x: float = 0.0,
                  F_y: float = 0.0):
         self.x = x
         self.y = y
+        self.C_x = C_x
+        self.C_y = C_y
         self.F_x = F_x
         self.F_y = F_y
 
@@ -18,6 +22,10 @@ class Node:
     @property
     def forces(self) -> np.ndarray:
         return np.array([self.F_x, self.F_y])
+
+    @property
+    def boundary_conditions(self) -> np.ndarray:
+        return np.array([self.C_x, self.C_y])
 
 def create_nodes(node_info):
     '''
@@ -35,10 +43,11 @@ def create_nodes(node_info):
     Each dict contains:
         [REQ]
         x, y        : x, y coordinates in global axes
+        C_x, C_y    : boolean for whether the node is constrained in the x or y axis
         [OPT]
         F_x, F_y    : Forces in global x, y axes
     '''
-    req_keys = {'x', 'y'}
+    req_keys = {'x', 'y', 'C_x', 'C_y'}
     opt_keys = {'F_x', 'F_y'}
 
     node_list = []
@@ -55,6 +64,8 @@ def create_nodes(node_info):
         node = Node(
                     x=spec['x'],
                     y=spec['y'],
+                    C_x=spec['C_x'],
+                    C_y=spec['C_y'],
                     **{k: spec[k] for k in opt_keys if k in spec}
                 )
 
@@ -146,3 +157,19 @@ def force_matrix(node_list):
     Creates a 2N x 1 array of all the external forces on each node
     '''
     return np.array([node.forces for node in node_list]).reshape(-1,1)
+
+def boundary_conditions(node_list):
+    '''
+    Parameters
+    ----------
+    node_list : list[Node]
+    
+    Returns
+    -------
+    F : np.ndarray
+    
+    Description
+    -----------
+    Creates a 2N x 1 array of all the constraints on each node
+    '''
+    return np.array([node.boundary_conditions for node in node_list]).reshape(-1,1)

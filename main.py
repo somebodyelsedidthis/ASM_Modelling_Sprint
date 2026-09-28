@@ -2,7 +2,7 @@ import nodes, elements, rotation, global_stiffness, solver, post_proc
 
 import numpy as np
 
-def main(node_info, element_info, boundary_conditions):
+def main(node_info: list[dict], element_info: list[dict]):
 
     # Create Node, Element objects #
 
@@ -10,6 +10,7 @@ def main(node_info, element_info, boundary_conditions):
     element_list = nodes.create_elements(element_info)
     connectivity_matrix = nodes.connectivity(element_list)
     forces = nodes.force_matrix(node_list)
+    boundary_conditions = nodes.boundary_conditions(node_list)
 
     # Calculate angles #
 
