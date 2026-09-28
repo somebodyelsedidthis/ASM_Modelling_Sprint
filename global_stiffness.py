@@ -5,7 +5,7 @@ class TrussStructure:
     def __init__(self,
                  elements: np.ndarray[Element],
                  nodes: np.ndarray[tuple],
-                 connectivity_matrix: np.ndarray,
+                 connectivity_matrix: np.ndarray[int],
                  angles: np.ndarray[float],
                  ):
         
@@ -42,7 +42,7 @@ class TrussStructure:
             node1=self.connectivity_matrix[i][0]
             node2=self.connectivity_matrix[i][1]
 
-            transformation_matrix = self._transformation_matrix(self, rotation_angle)
+            transformation_matrix = self._transformation_matrix(rotation_angle)
             local_stiffness_matrix = self.elements[i].local_stiffness_matrix
             transformed_local_matrix = (transformation_matrix@local_stiffness_matrix)@np.linalg.inv(transformation_matrix)                          
             
