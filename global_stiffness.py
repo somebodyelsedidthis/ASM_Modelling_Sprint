@@ -1,10 +1,11 @@
 import numpy as np
 from elements import Element
+from nodes import Node
 
 class TrussStructure:
     def __init__(self,
                  elements: np.ndarray[Element],
-                 nodes: np.ndarray[tuple],
+                 nodes: np.ndarray[Node],
                  connectivity_matrix: np.ndarray[int],
                  angles: np.ndarray[float],
                  ):
