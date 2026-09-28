@@ -3,7 +3,7 @@ import numpy as np
 class Solver:
     def __init__(self, global_stiffness_matrix, forces, boundary_conditions):
         self.K  = np.asarray(global_stiffness_matrix, dtype=float)
-        self.forces =  np.asarray(forces, dtype=float)
+        self.forces = np.asarray(forces, dtype=float).reshape(-1)
         self.boundary_conditions = np.asarray(boundary_conditions, dtype=float)
 
     def displacement(self):
