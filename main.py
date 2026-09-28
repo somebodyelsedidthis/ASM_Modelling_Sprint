@@ -1,6 +1,10 @@
 import elements
 import rotation
 import nodes
+import global_stiffness
+import solver
+import post_proc
+
 import numpy as np
 
 def main(element_info):
