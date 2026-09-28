@@ -7,8 +7,8 @@ class Element:
                  node_j: int,
                  E: float,
                  A: float,
-                 I: float,
-                 rho: float,
+                 I: float = 1.0,
+                 rho: float = 1.0,
                  element_type: str="truss"):
         
         self.node_i = np.asarray(node_i)
@@ -33,8 +33,10 @@ class Element:
 
         if self.element_type == "truss":
             self.local_stiffness_matrix = (E * A / L) * np.array([
-                [1.0, -1.0],
-                [-1.0, 1.0]
+                [1.0, 0, -1.0, 0],
+                [0,0,0,0],
+                [-1.0, 0, 1.0, 0],
+                [0,0,0,0]
             ])
 
         elif self.element_type == "frame": # Someone please check this I think I have it correct but you never know

@@ -1,5 +1,4 @@
 import numpy as np
-import elements
 
 class Node:
     def __init__(self,
@@ -12,13 +11,13 @@ class Node:
         self.F_x = F_x
         self.F_y = F_y
 
-        @property
-        def coords(self) -> np.ndarray:
-            return np.array([self.x, self.y])
+    @property
+    def coords(self) -> np.ndarray:
+        return np.array([self.x, self.y])
 
-        @property
-        def forces(self) -> np.ndarray:
-            return np.array([self.F_x, self.F_y])
+    @property
+    def forces(self) -> np.ndarray:
+        return np.array([self.F_x, self.F_y])
 
 def create_nodes(node_info):
     '''
@@ -85,6 +84,8 @@ def create_elements(element_info):
         rho             : density (defaults to 1.0 if not defined)
         element_type    : 'truss' or 'frame' (defaults to 'truss')
     '''
+    import elements
+    
     req_keys = {'node_i', 'node_j', 'E', 'A'}
     opt_keys = {'I', 'rho', 'element_type'}
 
