@@ -9,12 +9,19 @@ from global_stiffness import TrussStructure
 #     u = Solver.displacement
 #     return GSM @ u - forces
 
-def reaction(global_stiffness_matrix:TrussStructure, displacement:Solver, forces):
+# def reaction(global_stiffness_matrix:TrussStructure, displacement:Solver, forces):
+
+#     displacement = np.asarray(displacement).reshape(-1)
+#     forces = np.asarray(forces).reshape(-1)
+
+#     return global_stiffness_matrix.assemble_global_stiffness_matrix() @ displacement.displacement() - forces
+
+def reaction(global_stiffness_matrix, displacement, forces):
 
     displacement = np.asarray(displacement).reshape(-1)
     forces = np.asarray(forces).reshape(-1)
 
-    return global_stiffness_matrix.assemble_global_stiffness_matrix() @ displacement.displacement - forces
+    return global_stiffness_matrix @ displacement - forces
 
 # def strain(node_matrix, Solver.displacement):
 #     strain = np.array(np.zeros(node_matrix.shape[0]/4))
