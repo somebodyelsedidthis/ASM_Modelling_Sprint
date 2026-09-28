@@ -13,12 +13,6 @@ class Element:
     def length(self):
         return np.linalg.norm(self.node_j - self.node_i)
 
-    def angle(self):
-        # This is the angle from the horizontal in the counter-clockwise direction (-pi to pi)
-        # it is not used here, but it will be useful for the rotation matrix
-        dx, dy = self.node_j - self.node_i
-        return np.arctan2(dy, dx)
-
     def stiffness_matrix(self):
         L = self.length()
         E = self.E
