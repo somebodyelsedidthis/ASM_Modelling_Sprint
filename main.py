@@ -51,5 +51,16 @@ def create_elements(element_info):
 
     return element_list
 
+def node_information(element_list):
+    all_nodes = []
+    for elem in element_list:
+        all_nodes.append(elem.node_i)
+        all_nodes.append(elem.node_j)
+
+    unique_nodes, indices = np.unique(np.array(all_nodes), axis=0, return_inverse=True)
+    connectivity_matrix = indices.reshape(-1,2)
+
+    return connectivity_matrix, unique_nodes
+
 def main():
     pass
