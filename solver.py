@@ -14,7 +14,7 @@ class Solver:
         free_dofs = np.setdiff1d(all_dofs, prescribed_dofs)
 
         K_ff = self.K[np.ix_(free_dofs, free_dofs)]
-        K_fp = self.K[np.ix(free_dofs, prescribed_dofs)]
+        K_fp = self.K[np.ix_(free_dofs, prescribed_dofs)]
 
         F_f= self.forces[free_dofs]
         F_red = F_f -K_fp @ prescribed_values

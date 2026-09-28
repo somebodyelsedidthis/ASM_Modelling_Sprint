@@ -8,9 +8,11 @@ def test_solver():
         [0.0, -10.0, 10.0]
     ])
 
-    forces =  np.array([
-        [0,0.0]
-    ])
+    forces = np.array([
+    0.0,
+    0.0,
+    10.0
+])
 
     boundary_conditions = np.array([
         [0, 0]
@@ -29,7 +31,7 @@ def test_solver():
 
 def test_solver_prescribed_displacement():
     K = np.array([
-        [10.0, -10.0]
+        [10.0, -10.0],
         [-10.0, 10.0]
     ])
 
@@ -39,7 +41,7 @@ def test_solver_prescribed_displacement():
     ])
 
     boundary_conditions = np.array([
-        [0, 0.01]
+        [0, 0.01],
         [1, 0.01]
     ])
 
