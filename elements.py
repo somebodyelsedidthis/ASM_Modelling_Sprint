@@ -20,6 +20,7 @@ class Element:
 
     def length(self):
         self.element_length = np.linalg.norm(self.node_j - self.node_i)
+        return self.element_length
 
     def stiffness_matrix(self):
         L = self.length()
@@ -46,4 +47,9 @@ class Element:
                 [0.0, 6.0 * E * I / L ** 2, 2.0 * E * I / L,
                  0.0, -6.0 * E * I / L ** 2, 4.0 * E * I / L]
             ])
+
+        else:
+            raise ValueError(f'Unsupported element type: {self.element_type}')
+
+        return self.local_stiffness_matrix
     # I didn't implement mass matrix but if we want to implement gravity loads like that I can do that too
