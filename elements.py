@@ -1,7 +1,15 @@
 import numpy as np
 
 class Element:
-    def __init__(self, node_i, node_j, E, A, I=1.0, rho=1.0, element_type="truss"):
+    def __init__(self,
+                 node_i: tuple,
+                 node_j: tuple,
+                 E: float,
+                 A: float,
+                 I: float,
+                 rho: float,
+                 element_type: str="truss"):
+        
         self.node_i = np.asarray(node_i)
         self.node_j = np.asarray(node_j)
         self.E = E
@@ -11,7 +19,7 @@ class Element:
         self.element_type = element_type
 
     def length(self):
-        return np.linalg.norm(self.node_j - self.node_i)
+        self.element_length = np.linalg.norm(self.node_j - self.node_i)
 
     def stiffness_matrix(self):
         L = self.length()
@@ -20,13 +28,13 @@ class Element:
         I = self.I
 
         if self.element_type == "truss":
-            return (E * A / L) * np.array([
+            self.local_stiffness_matrix = (E * A / L) * np.array([
                 [1.0, -1.0],
                 [-1.0, 1.0]
             ])
 
         elif self.element_type == "frame": # Someone please check this I think I have it correct but you never know
-            return np.array([
+            self.local_stiffness_matrix = np.array([
                 [E * A / L, 0.0, 0.0, -E * A / L, 0.0, 0.0],
                 [0.0, 12.0 * E * I / L ** 3, 6.0 * E * I / L ** 2,
                  0.0, -12.0 * E * I / L ** 3, 6.0 * E * I / L ** 2],
