@@ -18,7 +18,7 @@ def test_element():
     assert np.isclose(elem.length(node_list), 5.0)
     # The truss matrix should be a symmetric 2x2 matrix
     k_truss = elem.stiffness_matrix(node_list)
-    assert k_truss.shape == (2, 2)
+    assert k_truss.shape == (4, 4)
     assert np.allclose(k_truss, k_truss.T)
 
     # The beam matrix should also be a symmetric 6x6 matrix
