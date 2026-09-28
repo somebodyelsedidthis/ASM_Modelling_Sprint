@@ -23,16 +23,14 @@ def reaction(global_stiffness_matrix, displacement, forces):
 #     return strain
 
 def strain(element_list, node_list, connectivity_matrix,
-           displacement, angles, TrussStructure):
+           displacement, angles, structure):
 
     strains = np.zeros(len(element_list))
 
     for i in range(len(element_list)):
-
         node_i = connectivity_matrix[i][0]
         node_j = connectivity_matrix[i][1]
 
-        # Displacements of this element in global coordinates
         u_global = np.array([
             displacement[2 * node_i],
             displacement[2 * node_i + 1],
@@ -40,15 +38,12 @@ def strain(element_list, node_list, connectivity_matrix,
             displacement[2 * node_j + 1]
         ])
 
-        # Same 4x4 transformation matrix used for stiffness
-        T = TrussStructure._transformation_matrix(angles[i])
+        T = structure._transformation_matrix(angles[i])
 
-        # Global -> local displacement
         u_local = T.T @ u_global
 
         L = element_list[i].length(node_list)
 
-        # Difference in LOCAL AXIAL displacement
         strains[i] = (u_local[2] - u_local[0]) / L
 
     return strains
