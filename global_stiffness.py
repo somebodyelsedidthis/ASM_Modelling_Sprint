@@ -1,14 +1,16 @@
 import numpy as np
 from elements import Element
+from nodes import Node
 
 class TrussStructure:
     def __init__(self,
                  elements: np.ndarray[Element],
-                 nodes: np.ndarray[tuple],
+                 nodes: np.ndarray[Node],
                  connectivity_matrix: np.ndarray[int],
                  angles: np.ndarray[float],
                  ):
-        
+        print('Nodes: ',nodes)
+        print(nodes.shape)
         self.elements = elements
         self.angles = angles
         self.total_DOFs = len(list(nodes))*2
@@ -42,14 +44,14 @@ class TrussStructure:
             node1=self.connectivity_matrix[i][0]
             node2=self.connectivity_matrix[i][1]
 
-            transformation_matrix = self._transformation_matrix(rotation_angle)
+            self.transformation_matrix = self._transformation_matrix(rotation_angle)
             local_stiffness_matrix = self.elements[i].local_stiffness_matrix
-            transformed_local_matrix = (transformation_matrix@local_stiffness_matrix)@np.linalg.inv(transformation_matrix)                          
+            self.transformed_local_matrix = (self.transformation_matrix@local_stiffness_matrix)@np.linalg.inv(self.transformation_matrix)                          
             
             boolean_connectivity_matrix = self._boolean_connectivity_matrix(node1,
                                                                             node2)
             
-            self.global_stiffness_matrix+=np.linalg.inv(boolean_connectivity_matrix)@transformed_local_matrix@boolean_connectivity_matrix
+            self.global_stiffness_matrix+=np.transpose(boolean_connectivity_matrix)@self.transformed_local_matrix@boolean_connectivity_matrix
 
         return self.global_stiffness_matrix
 

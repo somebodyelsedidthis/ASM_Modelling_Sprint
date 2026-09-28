@@ -1,36 +1,78 @@
 import numpy as np
+import pytest
+import numpy.testing as nte
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from global_stiffness import TrussStructure
+from elements import Element
+from nodes import create_nodes, create_elements
+from rotation import rotation_angles
 
-def boolean_connectivity_matrix(node1: int,
-                                node2: int):
+@pytest.fixture
+def elements():
+    element_info = [{'node_i':2,
+                            'node_j':3,
+                            'E':70e9,
+                            'A':10e-6},
+                        {'node_i':1,
+                            'node_j':2,
+                            'E':70e9,
+                            'A':10e-6}               
+                            ]
+    return create_elements(element_info=element_info)
 
-    total_DOFs=6    
-    L_e = np.zeros((4, total_DOFs))
-    L_e[0, 2*node1] = 1.0  # Local row 0 -> Node A (x)
-    L_e[1, 2*node1+1] = 1.0  # Local row 1 -> Node A (y)
-    L_e[2, 2*node2] = 1.0  # Local row 2 -> Node B (x)
-    L_e[3, 2*node2+1] = 1.0  # Local row 3 -> Node B (y)
+@pytest.fixture
+def nodes():
+     node_info=[{'x':0.0,
+                 'y':0.0},
+                 {'x':125.0/1000,
+                 'y':100.0/1000},
+                 {'x':0.0,
+                 'y':100.0/1000}]
+     return create_nodes(node_info=node_info)
+     
+@pytest.fixture
+def connectivity_matrix():
+    return np.array([
+         [3,2],
+         [1,2],
+    ])
 
-    return L_e
+@pytest.fixture
+def angles():
+    return rotation_angles(elements,
+                           nodes)
 
+@pytest.fixture
+def truss_structure():
+    return TrussStructure(np.array(elements),
+                          np.array(nodes),
+                          np.array(connectivity_matrix),
+                          np.array(angles))
 
-def transformation_matrix(theta_rad: float):
-        return np.array([
-            [np.cos(theta_rad), -np.sin(theta_rad), 0.0, 0.0],
-            [np.sin(theta_rad), np.cos(theta_rad), 0.0, 0.0],
-            [0.0, 0.0, np.cos(theta_rad), -np.sin(theta_rad)],
-            [0.0, 0.0, np.sin(theta_rad), np.cos(theta_rad)]
-        ])
+class TestGlobalStiffness:
+    def test_transformation_matrix(self,
+                                   truss_structure):
+        truss_structure.assemble_global_stiffness_matrix()
+        actual = truss_structure.transformation_matrix(np.radians(38.66))
+        nte.assert_allclose(actual,np.array([
+    [0.78087, -0.6247, 0,       0],
+    [0.6247,   0.78087, 0,       0],
+    [0,        0,       0.78087, -0.6247],
+    [0,        0,       0.6247,  0.78087]
+                                            ]))
 
-transformed_local_matrix= np.array([
+    def test_transformed_local_matrix(self,
+                                      truss_structure):
+        truss_structure.assemble_global_stiffness_matrix()
+        actual = truss_structure.transformed_local_matrix
+        nte.assert_allclose(actual,
+                            np.array([
     [ 2.67e3,  2.13e3, -2.67e3, -2.13e3],
     [ 2.13e3,  1.71e3, -2.13e3, -1.71e3],
     [-2.67e3, -2.13e3,  2.67e3,  2.13e3],
     [-2.13e3, -1.71e3,  2.13e3,  1.71e3]
 ])                       
+                            )
 
-boolean_matrix = boolean_connectivity_matrix(0,1)
-print('Boolean matrix: ',boolean_matrix)
-global_stiffness_matrix=np.zeros((6,6),dtype=np.float64)
-print('Global stiffness matrix: ',global_stiffness_matrix)
-global_stiffness_matrix+=(np.transpose(boolean_matrix)@transformed_local_matrix)@boolean_matrix
-print(global_stiffness_matrix)
