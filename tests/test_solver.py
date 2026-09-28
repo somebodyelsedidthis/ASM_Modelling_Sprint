@@ -8,9 +8,11 @@ def test_solver():
         [0.0, -10.0, 10.0]
     ])
 
-    forces =  np.array([
-        [0,0.0]
-    ])
+    forces = np.array([
+    0.0,
+    0.0,
+    0.0
+])
 
     boundary_conditions = np.array([
         [0, 0]
