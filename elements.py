@@ -1,9 +1,10 @@
 import numpy as np
+from nodes import Node
 
 class Element:
     def __init__(self,
-                 node_i: tuple,
-                 node_j: tuple,
+                 node_i: int,
+                 node_j: int,
                  E: float,
                  A: float,
                  I: float,
@@ -18,12 +19,14 @@ class Element:
         self.rho = rho
         self.element_type = element_type
 
-    def length(self):
-        self.element_length = np.linalg.norm(self.node_j - self.node_i)
+    def length(self, node_list):
+        ni = node_list[self.node_i]
+        nj = node_list[self.node_j]
+        self.element_length = np.linalg.norm(nj.coords - ni.coords)
         return self.element_length
 
-    def stiffness_matrix(self):
-        L = self.length()
+    def stiffness_matrix(self, node_list):
+        L = self.length(node_list)
         E = self.E
         A = self.A
         I = self.I

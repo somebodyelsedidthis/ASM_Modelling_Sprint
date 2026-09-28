@@ -1,6 +1,68 @@
 import numpy as np
 import elements
 
+class Node:
+    def __init__(self,
+                 x: float,
+                 y: float,
+                 F_x: float = 0.0,
+                 F_y: float = 0.0):
+        self.x = x
+        self.y = y
+        self.F_x = F_x
+        self.F_y = F_y
+
+        @property
+        def coords(self) -> np.ndarray:
+            return np.array([self.x, self.y])
+
+        @property
+        def forces(self) -> np.ndarray:
+            return np.array([self.F_x, self.F_y])
+
+def create_nodes(node_info):
+    '''
+    Parameters
+    ----------
+    node_info : list[dict]
+
+    Returns
+    -------
+    node_list : list[Node]
+
+    Description
+    -----------
+    Create a list of Node objects taking node information as dictionary type inputs
+    Each dict contains:
+        [REQ]
+        x, y        : x, y coordinates in global axes
+        [OPT]
+        F_x, F_y    : Forces in global x, y axes
+    '''
+    req_keys = {'x', 'y'}
+    opt_keys = {'F_x', 'F_y'}
+
+    node_list = []
+
+    for i, spec in enumerate(node_info):
+        missing = req_keys - spec.keys()
+        if missing:
+            raise ValueError(f'Element spec {i} is missing required keys: {missing}')
+    
+        unexpected = spec.keys() - (req_keys | opt_keys)
+        if unexpected:
+            raise ValueError(f'Element spec {i} has unexpected keys: {unexpected}')
+
+        node = Node(
+                    x=spec['x'],
+                    y=spec['y'],
+                    **{k: spec[k] for k in opt_keys if k in spec}
+                )
+
+        node_list.append(node)
+
+    return node_list
+
 def create_elements(element_info):
     '''
     Parameters
@@ -9,14 +71,14 @@ def create_elements(element_info):
 
     Returns
     -------
-    list[elements.Element]
+    element_list : list[elements.Element]
 
     Description
     -----------
     Create a list of Element objects taking element information as as dictionary type inputs.
     Each dict contains:
         [REQ]
-        node_i, node_j  : list of coordinates of each node
+        node_i, node_j  : Node indices [integer]
         E, A            : Young's modulus, cross-sectional area of the element
         [OPT]
         I               : second moment of intertia (defaults to 1.0 if not defined)
@@ -51,12 +113,25 @@ def create_elements(element_info):
     return element_list
 
 def information(element_list):
-    all_nodes = []
-    for elem in element_list:
-        all_nodes.append(elem.node_i)
-        all_nodes.append(elem.node_j)
+    '''
+    Parameters
+    ----------
+    element_list : list[elements.Element]
 
-    unique_nodes, indices = np.unique(np.array(all_nodes), axis=0, return_inverse=True)
-    connectivity_matrix = indices.reshape(-1,2)
+    Returns
+    -------
+    connectivity_matrix : numpy.ndarray
+    unique_nodes        : numpy.ndarray
 
-    return connectivity_matrix, unique_nodes
+    Description
+    -----------
+    Create the connectivity matrix & array of nodes
+    '''
+    
+    connectivity_matrix = np.array([[elem.node_i, elem.node_j] for elem in element_list])
+
+    return connectivity_matrix
+
+def force_matrix(force_list, node_list):
+    
+    pass
