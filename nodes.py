@@ -43,12 +43,12 @@ def create_nodes(node_info):
     Each dict contains:
         [REQ]
         x, y        : x, y coordinates in global axes
-        C_x, C_y    : boolean for whether the node is constrained in the x or y axis
         [OPT]
         F_x, F_y    : Forces in global x, y axes
+        C_x, C_y    : boolean for whether the node is constrained in the x or y axis
     '''
-    req_keys = {'x', 'y', 'C_x', 'C_y'}
-    opt_keys = {'F_x', 'F_y'}
+    req_keys = {'x', 'y'}
+    opt_keys = {'F_x', 'F_y', 'C_x', 'C_y'}
 
     node_list = []
 
@@ -64,8 +64,6 @@ def create_nodes(node_info):
         node = Node(
                     x=spec['x'],
                     y=spec['y'],
-                    C_x=spec['C_x'],
-                    C_y=spec['C_y'],
                     **{k: spec[k] for k in opt_keys if k in spec}
                 )
 
