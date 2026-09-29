@@ -9,7 +9,7 @@ import main, elements, nodes, rotation, global_stiffness, solver, post_proc
 def test_main_truss_analysis():
     node_info = [
         {'x':0.0,'y':0.0, 'D_x': 0.0, 'D_y': 0.0},
-        {'x':2.0,'y':0.0},
+        {'x':2.0,'y':0.0, 'D_y': 0.0},
         {'x':1.0,'y':1.0, 'F_x': 0.0, 'F_y': -1500.0}
     ]
 
@@ -19,7 +19,7 @@ def test_main_truss_analysis():
     element_info = [
         {'node_i':0,'node_j':1,'E': E,'A': A},
         {'node_i':1,'node_j':2,'E': E,'A': A},
-        {'node_i':2,'node_j':1,'E': E,'A': A},
+        {'node_i':2,'node_j':0,'E': E,'A': A},
     ]
 
     results = main.main(node_info, element_info)
@@ -39,15 +39,15 @@ def test_main_truss_analysis():
 
     assert np.isclose(displacements[0], 0.0)
     assert np.isclose(displacements[1], 0.0)
-    assert np.isclose(displacements[2], 0.0)
     assert np.isclose(displacements[3], 0.0)
 
 # Check displacement #
 
-    assert np.isclose(displacements[4], 0.0, atol=1e-8)
+    assert np.isclose(displacements[4], 3.75e-6)
     assert displacements[5] < 0.0
 
 # Check equilibrium of forces #
+
     vertical_reactions = reactions[1] + reactions[3]
     assert np.isclose(vertical_reactions, 1500.0)
 
