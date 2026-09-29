@@ -8,7 +8,7 @@ import main, elements, nodes, rotation, global_stiffness, solver, post_proc
 
 def test_main_truss_analysis():
     node_info = [
-        {'x':0.0,'y':0.0, 'C_x': True, 'C_y': True},
+        {'x':0.0,'y':0.0, 'D_x': 0.0, 'D_y': 0.0},
         {'x':2.0,'y':0.0},
         {'x':1.0,'y':1.0, 'F_x': 0.0, 'F_y': -1500.0}
     ]
