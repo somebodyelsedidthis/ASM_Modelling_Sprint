@@ -6,16 +6,16 @@ node_info = [
     {
         'x': 1.0,
         'y': 0.75,
-        'C_x': True,
-        'C_y': True
+        'D_x': 0,
+        'D_y': 0
     },
 
     # Node 2
     {
         'x': 1.75,
         'y': 0.0,
-        'C_x': False,
-        'C_y': True,
+        'D_x': None,
+        'D_y': 0,
         'F_x': 1500.0
     },
 
@@ -23,16 +23,16 @@ node_info = [
     {
         'x': 0.75,
         'y': 0.0,
-        'C_x': True,
-        'C_y': True
+        'D_x': 0,
+        'D_y': 0
     },
 
     # Node 4
     {
         'x': 0.0,
         'y': 0.0,
-        'C_x': False,
-        'C_y': True,
+        'D_x': None,
+        'D_y': 0,
         'F_x': -500.0
     },
 
@@ -40,8 +40,8 @@ node_info = [
     {
         'x': 0.5,
         'y': 0.5,
-        'C_x': False,
-        'C_y': False
+        'D_x': None,
+        'D_y': None
     }
 ]
 
