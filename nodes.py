@@ -4,14 +4,14 @@ class Node:
     def __init__(self,
                  x: float,
                  y: float,
-                 C_x: bool = False,
-                 C_y: bool = False,
+                 D_x: float | None = None,
+                 D_y: float | None = None,
                  F_x: float = 0.0,
                  F_y: float = 0.0):
         self.x = x
         self.y = y
-        self.C_x = C_x
-        self.C_y = C_y
+        self.D_x = D_x
+        self.D_y = D_y
         self.F_x = F_x
         self.F_y = F_y
 
@@ -24,8 +24,8 @@ class Node:
         return np.array([self.F_x, self.F_y])
 
     @property
-    def boundary_conditions(self) -> np.ndarray:
-        return np.array([self.C_x, self.C_y])
+    def displacements(self) -> np.ndarray:
+        return np.array([self.D_x, self.D_y])
 
 def create_nodes(node_info):
     '''
@@ -48,7 +48,7 @@ def create_nodes(node_info):
         C_x, C_y    : boolean for whether the node is constrained in the x or y axis
     '''
     req_keys = {'x', 'y'}
-    opt_keys = {'F_x', 'F_y', 'C_x', 'C_y'}
+    opt_keys = {'F_x', 'F_y', 'D_x', 'D_y'}
 
     node_list = []
 
@@ -156,18 +156,24 @@ def force_matrix(node_list):
     '''
     return np.array([node.forces for node in node_list]).reshape(-1,1)
 
-def boundary_conditions(node_list):
-    '''
-    Parameters
-    ----------
-    node_list : list[Node]
-    
-    Returns
-    -------
-    F : np.ndarray
-    
-    Description
-    -----------
-    Creates a 2N x 1 array of all the constraints on each node
-    '''
-    return np.array([node.boundary_conditions for node in node_list]).reshape(-1,1)
+def prescribed_displacements(node_list):
+
+    prescribed_dofs = []
+    prescribed_values = []
+
+    for i, node in enumerate(node_list):
+
+        # x DOF
+        if node.D_x is not None:
+            prescribed_dofs.append(2 * i)
+            prescribed_values.append(node.D_x)
+
+        # y DOF
+        if node.D_y is not None:
+            prescribed_dofs.append(2 * i + 1)
+            prescribed_values.append(node.D_y)
+
+    return np.column_stack([
+        prescribed_dofs,
+        prescribed_values
+    ])
