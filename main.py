@@ -10,7 +10,7 @@ def main(node_info: list[dict], element_info: list[dict]):
     element_list = nodes.create_elements(element_info)
     connectivity_matrix = nodes.connectivity(element_list)
     forces = nodes.force_matrix(node_list)
-    displacements = nodes.prescribed_displacements(node_list)
+    prescribed_displacements = nodes.prescribed_displacements(node_list)
 
     # Calculate angles #
 
@@ -37,7 +37,7 @@ def main(node_info: list[dict], element_info: list[dict]):
     fem_solver = solver.Solver(
         global_stiffness_matrix=K_global,
         forces=forces,
-        prescribed_displacements=displacements
+        prescribed_displacements=prescribed_displacements
     )
 
     displacements = fem_solver.displacement()
@@ -63,3 +63,6 @@ def main(node_info: list[dict], element_info: list[dict]):
         'strains' : strains,
         'stresses' : stresses
     }
+
+#def visualise():
+    
