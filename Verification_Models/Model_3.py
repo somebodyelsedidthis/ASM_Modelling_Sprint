@@ -1,10 +1,17 @@
+import sys
+import os
+
+# add parent directory to import path
+current = os.path.dirname(os.path.realpath(__file__))
+parent = os.path.dirname(current)
+sys.path.append(parent)
 import pytest
 import main, elements, nodes, rotation, global_stiffness, solver, post_proc
 
 node_info = [
     # Node 1
     {
-        'x': 1.0,
+        'x': 1.25,
         'y': 0.75,
         'D_x': 0,
         'D_y': 0
@@ -12,7 +19,7 @@ node_info = [
 
     # Node 2
     {
-        'x': 1.75,
+        'x': 2.0,
         'y': 0.0,
         'D_x': None,
         'D_y': 0,
