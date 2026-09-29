@@ -7,7 +7,6 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from global_stiffness import TrussStructure
 from nodes import create_nodes, create_elements
 
-
 K_ELEM_1 = np.array([
     [ 2.6664e6,  2.1331e6, -2.6664e6, -2.1331e6],
     [ 2.1331e6,  1.7065e6, -2.1331e6, -1.7065e6],
@@ -22,7 +21,6 @@ K_ELEM_0 = 5.6e6 * np.array([
     [ 0.0, 0.0,  0.0, 0.0],
 ])
 
-
 @pytest.fixture
 def elements():
     element_info = [{'node_i': 1,
@@ -35,23 +33,19 @@ def elements():
                      'A': 10e-6}]
     return create_elements(element_info=element_info)
 
-
 @pytest.fixture
 def nodes():
     node_info = [{'x': 0.0,
                   'y': 0.0,
-                  'C_x': True,
-                  'C_y': True},
+                  'D_x': 0.0,
+                  'D_y': 0.0},
                  {'x': 125.0 / 1000,
-                  'y': 100.0 / 1000,
-                  'C_x': False,
-                  'C_y': False},
+                  'y': 100.0 / 1000},
                  {'x': 0.0,
                   'y': 100.0 / 1000,
-                  'C_x': True,
-                  'C_y': True}]
+                  'D_x': 0.0,
+                  'D_y': 0.0}]
     return create_nodes(node_info=node_info)
-
 
 @pytest.fixture
 def connectivity_matrix():
@@ -60,7 +54,6 @@ def connectivity_matrix():
         [0, 1],
     ])
 
-
 @pytest.fixture
 def angles():
     return np.array([
@@ -68,14 +61,12 @@ def angles():
         np.arctan2(0.1, 0.125),
     ])
 
-
 @pytest.fixture
 def truss_structure(elements, nodes, connectivity_matrix, angles):
     return TrussStructure(np.array(elements),
                           np.array(nodes),
                           np.array(connectivity_matrix),
                           np.array(angles))
-
 
 class TestTransformationMatrix:
     def test_transformation_matrix(self, truss_structure):
@@ -96,7 +87,6 @@ class TestTransformationMatrix:
         T = truss_structure._transformation_matrix(np.radians(38.66))
         nte.assert_allclose(T @ T.T, np.eye(4), atol=1e-12)
 
-
 class TestElementGlobalMatrix:
     def test_inclined_element(self, truss_structure):
         actual = truss_structure.element_global_matrix(1)
@@ -105,7 +95,6 @@ class TestElementGlobalMatrix:
     def test_horizontal_element(self, truss_structure):
         actual = truss_structure.element_global_matrix(0)
         nte.assert_allclose(actual, K_ELEM_0, rtol=1e-3, atol=1e-3)
-
 
 class TestGlobalStiffness:
     def test_shape(self, truss_structure):
