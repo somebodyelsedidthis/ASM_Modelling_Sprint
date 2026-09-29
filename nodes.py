@@ -4,8 +4,8 @@ class Node:
     def __init__(self,
                  x: float,
                  y: float,
-                 C_x: bool,
-                 C_y: bool,
+                 C_x: bool = False,
+                 C_y: bool = False,
                  F_x: float = 0.0,
                  F_y: float = 0.0):
         self.x = x
