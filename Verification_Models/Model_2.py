@@ -14,3 +14,6 @@ element_info = [
     {'node_i':1,'node_j':4,'E':70e9,'A':1e-5},
     {'node_i':1,'node_j':3,'E':70e9,'A':2e-5}
 ]
+
+
+print(main.main(node_info, element_info))
