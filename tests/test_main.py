@@ -19,7 +19,7 @@ def test_main_truss_analysis():
     element_info = [
         {'node_i':0,'node_j':1,'E': E,'A': A},
         {'node_i':1,'node_j':2,'E': E,'A': A},
-        {'node_i':2,'node_j':3,'E': E,'A': A},
+        {'node_i':2,'node_j':1,'E': E,'A': A},
     ]
 
     results = main.main(node_info, element_info)
