@@ -31,13 +31,18 @@ def test_node_properties():
 
 def test_create_nodes_valid():
     info = [
-        {'x': 0.0, 'y': 0.0},
-        {'x': 1.0, 'y': 0.0, 'F_x': 5.0, 'F_y': 5.0}
+        {'x': 0.0, 'y': 0.0, 'C_x': False, 'C_y': False},
+        {'x': 1.0, 'y': 0.0, 'C_x': True, 'C_y': False, 'F_x': 5.0, 'F_y': 5.0}
     ]
+
     nodes = create_nodes(info)
+
     assert len(nodes) == 2
-    assert nodes[0].x == 0.0 and nodes[0].F_x == 0.0
-    assert nodes[1].x == 1.0 and nodes[1].F_x == 5.0
+    assert nodes[0].x == 0.0
+    assert nodes[0].C_x is False
+    assert nodes[1].x == 1.0
+    assert nodes[1].C_x is True
+    assert nodes[1].F_x == 5.0
 
 def test_create_nodes_missing_keys():
     info = [
@@ -113,8 +118,22 @@ def test_connectivity():
 
 def test_force_matrix():
     node_info = [
-        {'x': 0.0, 'y': 0.0, 'F_x': 0.0, 'F_y': 5.0},
-        {'x': 5.0, 'y': 3.0, 'F_x': 10.0, 'F_y': -25.0}
+        {
+            'x': 0.0,
+            'y': 0.0,
+            'C_x': False,
+            'C_y': False,
+            'F_x': 0.0,
+            'F_y': 5.0
+        },
+        {
+            'x': 5.0,
+            'y': 3.0,
+            'C_x': False,
+            'C_y': False,
+            'F_x': 10.0,
+            'F_y': -25.0
+        }
     ]
 
     nodes = create_nodes(node_info)
@@ -127,5 +146,5 @@ def test_force_matrix():
         [-25.0]
     ])
 
-    assert F.shape == (4,1)
+    assert F.shape == (4, 1)
     np.testing.assert_array_equal(F, expected)
