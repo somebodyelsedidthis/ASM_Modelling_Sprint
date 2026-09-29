@@ -64,5 +64,5 @@ def main(node_info: list[dict], element_info: list[dict]):
         'stresses' : stresses
     }
 
-def visualise():
+#def visualise():
     
