@@ -79,3 +79,5 @@ element_info = [
         'A': 5e-5
     }
 ]
+
+print(main.main(node_info, element_info))
